@@ -108,7 +108,7 @@ body{margin:0}
       <sc-if value="{{ erTrener }}" hint-placeholder-val="{{ false }}">
         <div role="group" aria-label="Velg profil" style="display:flex;border:1px solid #DDE4E8;border-radius:999px;padding:3px;gap:2px;background:#fff">
           <button onClick="{{ tilMedlemModus }}" aria-pressed="{{ medlemPressed }}" style="{{ medlemKnapp }}">Medlem</button>
-          <button onClick="{{ tilTrenerModus }}" aria-pressed="{{ trenerPressed }}" style="{{ trenerKnapp }}">Trener</button>
+          <button onClick="{{ tilTrenerModus }}" aria-pressed="{{ trenerPressed }}" style="{{ trenerKnapp }}">{{ rolleKnappTekst }}</button>
         </div>
       </sc-if>
       <div style="width:40px;height:40px;border-radius:50%;background:#E4EEF1;color:#06303F;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px" aria-hidden="true">{{ m.initialer }}</div>
@@ -149,23 +149,6 @@ body{margin:0}
             <p style="font-size:14px;margin-top:2px">Velg «Legg til på hjemskjermen» i nettleseren, så åpner Min side som en app.</p>
           </div>
         </div>
-
-        <sc-if value="{{ harHus }}" hint-placeholder-val="{{ true }}">
-        <div class="card" style="background:#06303F;border-color:#06303F;color:#fff;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
-          <div style="min-width:0;flex:1 1 260px">
-            <p class="kicker" style="color:#7FD6EC">Klubbspillet · uke {{ ukeNr }}</p>
-            <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:6px">
-              <span style="font-family:Spectral,serif;font-size:32px;font-weight:600">{{ hus.navn }}</span>
-              <span style="font-size:15px;font-weight:600">{{ hus.plassTekst }} · {{ husPoengTekst }} p</span>
-            </div>
-            <p style="color:#DDE4E8;font-size:14px;margin-top:6px">Du har bidratt med {{ mittUke }} p denne uka. Evaluering søndag kl. 20.00.</p>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:10px">
-            <button class="btn" onClick="{{ tilSpill }}" style="background:#00AEDA;color:#06303F">Registrer poeng</button>
-            <button class="btn-sec" onClick="{{ tilHus }}" style="background:transparent;color:#fff;border-color:#fff">Til huset</button>
-          </div>
-        </div>
-        </sc-if>
 
         <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:stretch">
           <div class="card" style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:10px">
@@ -221,32 +204,18 @@ body{margin:0}
 
         <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">
           <div class="card" style="flex:2 1 380px;min-width:0">
-            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px">
-              <h2 style="font-size:20px">Kalender</h2>
-              <div style="display:flex;flex-wrap:wrap;gap:6px">
-                <sc-for list="{{ kalFiltre }}" as="kf" hint-placeholder-count="4">
-                  <button class="pill" onClick="{{ kf.go }}" style="{{ kf.stil }}">{{ kf.label }}</button>
-                </sc-for>
-              </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
+              <h2 style="font-size:20px">Neste treninger</h2>
+              <span class="muted" style="font-size:13px">Svar gjøres i Spond</span>
             </div>
             <div style="display:flex;flex-direction:column">
-              <sc-for list="{{ kalRader }}" as="k" hint-placeholder-count="4">
-                <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #EEF1F3">
-                  <div style="min-width:0;flex:1 1 220px">
-                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span class="tag" style="{{ k.typeStil }}">{{ k.type }}</span><strong>{{ k.navn }}</strong></div>
-                    <div class="muted" style="font-size:13px;margin-top:2px">{{ k.dato }} · {{ k.tid }} · {{ k.sted }}</div>
-                    <sc-if value="{{ k.harPoeng }}" hint-placeholder-val="{{ true }}"><div style="font-size:13px;color:#00789B;font-weight:600">{{ k.poeng }}</div></sc-if>
-                  </div>
-                  <sc-if value="{{ k.paameldt }}" hint-placeholder-val="{{ true }}">
-                    <div style="display:flex;align-items:center;gap:8px;flex:none"><span class="tag" style="background:#DCEBEF;color:#06303F">Påmeldt</span><button class="btn-sec" onClick="{{ k.toggle }}" style="min-height:36px;padding:0 14px">Meld av</button></div>
-                  </sc-if>
-                  <sc-if value="{{ k.ikke }}" hint-placeholder-val="{{ false }}">
-                    <button class="btn" onClick="{{ k.toggle }}" style="min-height:36px;padding:0 16px;flex:none">Meld på</button>
-                  </sc-if>
+              <sc-for list="{{ neste }}" as="t" hint-placeholder-count="3">
+                <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid #EEF1F3">
+                  <div><div style="font-weight:600">{{ t.navn }}</div><div class="muted" style="font-size:13px">{{ t.dato }} · {{ t.tid }} · {{ t.sted }}</div></div>
+                  <span class="tag" style="{{ t.stil }}">{{ t.status }}</span>
                 </div>
               </sc-for>
             </div>
-            <p class="muted" style="font-size:13px;margin-top:4px;padding-top:10px;border-top:1px solid #EEF1F3">Er du påmeldt og ikke møter, trekkes huset ditt 50 p. Meld deg av hvis du ikke kan komme.</p>
           </div>
           <div class="card" style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:12px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
@@ -459,97 +428,17 @@ body{margin:0}
 
         <sc-if value="{{ fSpill }}" hint-placeholder-val="{{ false }}">
         <div class="card" style="display:flex;flex-direction:column;gap:16px">
-          <div><h2 style="font-size:20px">Registrer poeng til huset</h2><p class="muted" style="font-size:13px;margin-top:2px">Faste oppgaver og ukens spilloppgaver i Klubbspillet. Poengene går rett til {{ husNavnTekst }}.</p></div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
-            <sc-for list="{{ poengOppg }}" as="po" hint-placeholder-count="4">
-              <button onClick="{{ po.go }}" aria-pressed="{{ po.trykket }}" aria-disabled="{{ po.deaktiv }}" style="{{ po.stil }}">
-                <span style="display:flex;justify-content:space-between;gap:8px;width:100%"><strong>{{ po.navn }}</strong><strong style="flex:none">{{ po.poengTekst }}</strong></span>
-                <span style="font-size:13px;line-height:1.35">{{ po.info }}</span>
-              </button>
-            </sc-for>
+          <div><h2 style="font-size:20px">Ny spillrunde</h2><p class="muted" style="font-size:13px;margin-top:2px">Registrer treningsspill du har skutt, alene eller mot andre.</p></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+            <div class="field"><label for="sp">Spill</label>
+              <select id="sp" onChange="{{ h.spill_navn }}">
+                <option>Ballongskyting</option><option>Tre på rad</option><option>Utslagsrunde</option><option>Poengjakt</option>
+              </select></div>
+            <div class="field"><label for="sd">Dato</label><input id="sd" type="text" value="{{ f.spill_dato }}" onInput="{{ h.spill_dato }}"></div>
+            <div class="field"><label for="sh">Mot hvem</label><input id="sh" type="text" value="{{ f.spill_mot }}" onInput="{{ h.spill_mot }}"></div>
+            <div class="field"><label for="sr">Resultat</label><input id="sr" type="text" value="{{ f.spill_res }}" onInput="{{ h.spill_res }}"></div>
           </div>
-          <sc-if value="{{ vSkaare }}" hint-placeholder-val="{{ true }}">
-            <div style="display:flex;flex-direction:column;gap:14px">
-              <sc-if value="{{ ekstraSkaare }}" hint-placeholder-val="{{ false }}">
-                <div style="background:#F3E3D2;border:1px solid #C4762E;border-radius:10px;padding:12px 16px;font-size:14px"><strong>Ekstraoppgave fra {{ hus.ekstra.fra }}:</strong> {{ hus.ekstra.tekst }}</div>
-              </sc-if>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
-                <div class="field"><label for="skp">Skåre (av 300)</label><input id="skp" type="text" inputmode="numeric" value="{{ f.skaare_poeng }}" onInput="{{ h.skaare_poeng }}"></div>
-                <div class="field"><label for="skd">Dato</label><input id="skd" type="text" value="{{ f.skaare_dato }}" onInput="{{ h.skaare_dato }}"></div>
-              </div>
-            </div>
-          </sc-if>
-          <sc-if value="{{ vKake }}" hint-placeholder-val="{{ false }}">
-            <div style="background:#F8F6F2;border:1px solid #DDE4E8;border-radius:10px;padding:14px 16px;font-size:14px"><strong>Neste stevne i klubben:</strong> Vinterstevnet Lillehammer, lørdag 6. februar. Kiosken tar imot én kake per hus.</div>
-          </sc-if>
-          <sc-if value="{{ vUke }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;flex-direction:column;gap:14px">
-              <sc-if value="{{ ukeFlere }}" hint-placeholder-val="{{ false }}">
-                <div>
-                  <div style="font-size:13px;font-weight:600;margin-bottom:8px">Velg oppgave i uke {{ ukeNr }}</div>
-                  <div style="display:flex;flex-wrap:wrap;gap:8px">
-                    <sc-for list="{{ ukePills }}" as="up" hint-placeholder-count="2">
-                      <button class="pill" onClick="{{ up.go }}" style="{{ up.stil }}">{{ up.label }}</button>
-                    </sc-for>
-                  </div>
-                </div>
-              </sc-if>
-              <div style="background:#F8F6F2;border:1px solid #DDE4E8;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
-                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span class="tag" style="{{ uv.katStil }}">{{ uv.kat }}</span><strong>Uke {{ ukeNr }}: {{ uv.tittel }}</strong></div>
-                <sc-for list="{{ uv.tekstL }}" as="t" hint-placeholder-count="2"><p style="font-size:14px">{{ t.linje }}</p></sc-for>
-                <ul style="margin:0;padding-left:18px;font-size:14px;font-weight:600;color:#00789B">
-                  <sc-for list="{{ uv.reglerL }}" as="r" hint-placeholder-count="2"><li>{{ r.linje }}</li></sc-for>
-                </ul>
-              </div>
-              <sc-if value="{{ uvMaal }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
-                  <div class="field"><label for="um1">Innen mars</label><input id="um1" type="text" value="{{ f.uke_maal1 }}" onInput="{{ h.uke_maal1 }}"></div>
-                  <div class="field"><label for="um2">Innen september</label><input id="um2" type="text" value="{{ f.uke_maal2 }}" onInput="{{ h.uke_maal2 }}"></div>
-                  <div class="field"><label for="um3">Innen desember</label><input id="um3" type="text" value="{{ f.uke_maal3 }}" onInput="{{ h.uke_maal3 }}"></div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ uvSkaare }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;align-items:end">
-                  <div class="field"><label for="usk">Skåre (av {{ uv.maksSkaare }})</label><input id="usk" type="text" inputmode="numeric" value="{{ f.uke_skaare }}" onInput="{{ h.uke_skaare }}"></div>
-                  <p class="muted" style="font-size:14px;padding-bottom:10px">Forsøk brukt denne uka: {{ uvForsok }}</p>
-                </div>
-              </sc-if>
-              <sc-if value="{{ uvSporsmal }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;flex-direction:column;gap:14px">
-                  <div class="field"><label for="usp1">{{ uv.sp1 }}</label><textarea id="usp1" onInput="{{ h.uke_sp1 }}" style="min-height:80px" value="{{ f.uke_sp1 }}"></textarea></div>
-                  <div class="field"><label for="usp2">{{ uv.sp2 }}</label><textarea id="usp2" onInput="{{ h.uke_sp2 }}" style="min-height:80px" value="{{ f.uke_sp2 }}"></textarea></div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ uvPlass }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;flex-direction:column;gap:12px">
-                  <div style="font-size:13px;font-weight:600">Din plassering</div>
-                  <div style="display:flex;flex-wrap:wrap;gap:8px">
-                    <sc-for list="{{ plassValg }}" as="pv" hint-placeholder-count="4">
-                      <button class="pill" onClick="{{ pv.go }}" style="{{ pv.stil }}">{{ pv.label }}</button>
-                    </sc-for>
-                  </div>
-                  <div style="border:1.5px dashed #6E6A63;border-radius:10px;padding:24px;text-align:center;background:#F8F6F2">
-                    <strong>Legg ved bildebevis</strong>
-                    <p class="muted" style="font-size:13px;margin-top:4px">JPG eller PNG, inntil 10 MB</p>
-                  </div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ uvOppskrift }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;flex-direction:column;gap:14px">
-                  <div class="field"><label for="uon">Navn på oppskriften</label><input id="uon" type="text" value="{{ f.uke_oppskrift_navn }}" onInput="{{ h.uke_oppskrift_navn }}"></div>
-                  <div class="field"><label for="uot">Oppskrift</label><textarea id="uot" onInput="{{ h.uke_oppskrift }}" value="{{ f.uke_oppskrift }}"></textarea></div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ uvBilde }}" hint-placeholder-val="{{ false }}">
-                <div style="border:1.5px dashed #6E6A63;border-radius:10px;padding:24px;text-align:center;background:#F8F6F2">
-                  <strong>Legg ved bilde</strong>
-                  <p class="muted" style="font-size:13px;margin-top:4px">JPG eller PNG, inntil 10 MB</p>
-                </div>
-              </sc-if>
-            </div>
-          </sc-if>
-          <div><button class="btn" onClick="{{ registrerPoeng }}">{{ spillKnapp }}</button></div>
-          <p class="muted" style="font-size:13px;border-top:1px solid #EEF1F3;padding-top:14px"><strong style="color:#06303F">Registreres automatisk:</strong> stevnedeltakelse 20 p, stevneplassering, norsk rekord 20 p, resultat i juniorserien 20 p, oppmøte på dugnad 20 p og på trening 5 p. <strong style="color:#06303F">Trekk:</strong> påmeldt uten å møte −50 p.</p>
+          <div><button class="btn" onClick="{{ lagreSpill }}">Lagre spill</button></div>
         </div>
         </sc-if>
 
@@ -608,10 +497,6 @@ body{margin:0}
               <div class="field"><label for="lj">Deles med {{ trenerNavn }}</label><textarea id="lj" onInput="{{ h.logg_neste }}" style="min-height:110px" value="{{ f.logg_neste }}"></textarea></div>
             </div>
           </div>
-          <button onClick="{{ toggleLoggOff }}" aria-pressed="{{ loggOffPressed }}" style="{{ loggOffStil }}">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M4 20V9l8-5 8 5v11M9 20v-6h6v6"></path></svg>
-            <span style="display:flex;flex-direction:column;gap:2px;text-align:left"><strong>{{ loggOffTittel }}</strong><span style="font-size:13px">{{ loggOffTekst }}</span></span>
-          </button>
           <div><button class="btn" onClick="{{ lagreLogg }}">Lagre i loggen</button></div>
         </div>
         </sc-if>
@@ -713,6 +598,101 @@ body{margin:0}
                 </sc-for>
               </div>
 
+              <div class="card" style="display:flex;flex-direction:column;gap:16px">
+                <div><h2 style="font-size:20px">Registrer poeng til huset</h2><p class="muted" style="font-size:13px;margin-top:2px">Faste oppgaver og ukens spilloppgaver i Klubbspillet. Poengene går rett til {{ husNavnTekst }}.</p></div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+                  <sc-for list="{{ poengOppg }}" as="po" hint-placeholder-count="4">
+                    <button onClick="{{ po.go }}" aria-pressed="{{ po.trykket }}" aria-disabled="{{ po.deaktiv }}" style="{{ po.stil }}">
+                      <span style="display:flex;justify-content:space-between;gap:8px;width:100%"><strong>{{ po.navn }}</strong><strong style="flex:none">{{ po.poengTekst }}</strong></span>
+                      <span style="font-size:13px;line-height:1.35">{{ po.info }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ vSkaare }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:14px">
+                    <sc-if value="{{ ekstraSkaare }}" hint-placeholder-val="{{ false }}">
+                      <div style="background:#F3E3D2;border:1px solid #C4762E;border-radius:10px;padding:12px 16px;font-size:14px"><strong>Ekstraoppgave fra {{ hus.ekstra.fra }}:</strong> {{ hus.ekstra.tekst }}</div>
+                    </sc-if>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+                      <div class="field"><label for="skp">Skåre (av 300)</label><input id="skp" type="text" inputmode="numeric" value="{{ f.skaare_poeng }}" onInput="{{ h.skaare_poeng }}"></div>
+                      <div class="field"><label for="skd">Dato</label><input id="skd" type="text" value="{{ f.skaare_dato }}" onInput="{{ h.skaare_dato }}"></div>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ vKake }}" hint-placeholder-val="{{ false }}">
+                  <div style="background:#F8F6F2;border:1px solid #DDE4E8;border-radius:10px;padding:14px 16px;font-size:14px"><strong>Neste stevne i klubben:</strong> Vinterstevnet Lillehammer, lørdag 6. februar. Kiosken tar imot én kake per hus.</div>
+                </sc-if>
+                <sc-if value="{{ vUke }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:14px">
+                    <sc-if value="{{ ukeFlere }}" hint-placeholder-val="{{ false }}">
+                      <div>
+                        <div style="font-size:13px;font-weight:600;margin-bottom:8px">Velg oppgave i uke {{ ukeNr }}</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px">
+                          <sc-for list="{{ ukePills }}" as="up" hint-placeholder-count="2">
+                            <button class="pill" onClick="{{ up.go }}" style="{{ up.stil }}">{{ up.label }}</button>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <div style="background:#F8F6F2;border:1px solid #DDE4E8;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+                      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span class="tag" style="{{ uv.katStil }}">{{ uv.kat }}</span><strong>Uke {{ ukeNr }}: {{ uv.tittel }}</strong></div>
+                      <sc-for list="{{ uv.tekstL }}" as="t" hint-placeholder-count="2"><p style="font-size:14px">{{ t.linje }}</p></sc-for>
+                      <ul style="margin:0;padding-left:18px;font-size:14px;font-weight:600;color:#00789B">
+                        <sc-for list="{{ uv.reglerL }}" as="r" hint-placeholder-count="2"><li>{{ r.linje }}</li></sc-for>
+                      </ul>
+                    </div>
+                    <sc-if value="{{ uvMaal }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+                        <div class="field"><label for="um1">Innen mars</label><input id="um1" type="text" value="{{ f.uke_maal1 }}" onInput="{{ h.uke_maal1 }}"></div>
+                        <div class="field"><label for="um2">Innen september</label><input id="um2" type="text" value="{{ f.uke_maal2 }}" onInput="{{ h.uke_maal2 }}"></div>
+                        <div class="field"><label for="um3">Innen desember</label><input id="um3" type="text" value="{{ f.uke_maal3 }}" onInput="{{ h.uke_maal3 }}"></div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ uvSkaare }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;align-items:end">
+                        <div class="field"><label for="usk">Skåre (av {{ uv.maksSkaare }})</label><input id="usk" type="text" inputmode="numeric" value="{{ f.uke_skaare }}" onInput="{{ h.uke_skaare }}"></div>
+                        <p class="muted" style="font-size:14px;padding-bottom:10px">Forsøk brukt denne uka: {{ uvForsok }}</p>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ uvSporsmal }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:14px">
+                        <div class="field"><label for="usp1">{{ uv.sp1 }}</label><textarea id="usp1" onInput="{{ h.uke_sp1 }}" style="min-height:80px" value="{{ f.uke_sp1 }}"></textarea></div>
+                        <div class="field"><label for="usp2">{{ uv.sp2 }}</label><textarea id="usp2" onInput="{{ h.uke_sp2 }}" style="min-height:80px" value="{{ f.uke_sp2 }}"></textarea></div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ uvPlass }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:12px">
+                        <div style="font-size:13px;font-weight:600">Din plassering</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px">
+                          <sc-for list="{{ plassValg }}" as="pv" hint-placeholder-count="4">
+                            <button class="pill" onClick="{{ pv.go }}" style="{{ pv.stil }}">{{ pv.label }}</button>
+                          </sc-for>
+                        </div>
+                        <div style="border:1.5px dashed #6E6A63;border-radius:10px;padding:24px;text-align:center;background:#F8F6F2">
+                          <strong>Legg ved bildebevis</strong>
+                          <p class="muted" style="font-size:13px;margin-top:4px">JPG eller PNG, inntil 10 MB</p>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ uvOppskrift }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:14px">
+                        <div class="field"><label for="uon">Navn på oppskriften</label><input id="uon" type="text" value="{{ f.uke_oppskrift_navn }}" onInput="{{ h.uke_oppskrift_navn }}"></div>
+                        <div class="field"><label for="uot">Oppskrift</label><textarea id="uot" onInput="{{ h.uke_oppskrift }}" value="{{ f.uke_oppskrift }}"></textarea></div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ uvBilde }}" hint-placeholder-val="{{ false }}">
+                      <div style="border:1.5px dashed #6E6A63;border-radius:10px;padding:24px;text-align:center;background:#F8F6F2">
+                        <strong>Legg ved bilde</strong>
+                        <p class="muted" style="font-size:13px;margin-top:4px">JPG eller PNG, inntil 10 MB</p>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+                <div><button class="btn" onClick="{{ registrerPoeng }}">{{ spillKnapp }}</button></div>
+                <sc-if value="{{ meldingVis }}" hint-placeholder-val="{{ false }}"><div role="status" style="background:#E4EEF1;border:1px solid #00789B;border-radius:10px;padding:14px 18px"><strong>{{ melding }}</strong></div></sc-if>
+                <p class="muted" style="font-size:13px;border-top:1px solid #EEF1F3;padding-top:14px"><strong style="color:#06303F">Registreres automatisk:</strong> stevnedeltakelse 20 p, stevneplassering, norsk rekord 20 p, resultat i juniorserien 20 p, oppmøte på dugnad 20 p og på trening 5 p. <strong style="color:#06303F">Trekk:</strong> påmeldt uten å møte −50 p.</p>
+              </div>
+
               <sc-if value="{{ hus.harEkstra }}" hint-placeholder-val="{{ true }}">
                 <div class="card" style="background:#F3E3D2;border-color:#C4762E">
                   <p class="kicker" style="color:#7A3E0E">Ekstraoppgave fra {{ hus.ekstra.fra }}</p>
@@ -795,6 +775,216 @@ body{margin:0}
       </div>
       </sc-if>
 
+      <!-- ===== HUSADMIN: HUSENE ===== -->
+      <sc-if value="{{ sHAdm }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div>
+          <p class="kicker">Husadministrator</p>
+          <h1 style="font-size:34px;margin-top:4px">Husene</h1>
+          <p class="muted" style="margin-top:6px">Uke {{ ukeNr }} · evaluering søndag kl. 20.00</p>
+        </div>
+        <sc-if value="{{ meldingVis }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="background:#E4EEF1;border:1px solid #00789B;border-radius:10px;padding:14px 18px"><strong>{{ melding }}</strong></div>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+          <div style="flex:2 1 420px;min-width:0;display:flex;flex-direction:column;gap:20px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px">
+              <sc-for list="{{ husKort }}" as="hk" hint-placeholder-count="3">
+                <button onClick="{{ hk.velg }}" aria-pressed="{{ hk.valgt }}" style="{{ hk.stil }}">
+                  <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;width:100%"><span style="font-family:Spectral,serif;font-size:22px;font-weight:600">{{ hk.navn }}</span><span style="font-size:13px;font-weight:600">{{ hk.plassTekst }}</span></span>
+                  <span style="font-family:Spectral,serif;font-size:30px;font-weight:600">{{ hk.poeng }}</span>
+                  <span style="font-size:13px">+{{ hk.uke }} p denne uka · {{ hk.antall }} utøvere</span>
+                  <span style="font-size:13px">Sekretær: {{ hk.sekretaer }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div class="card">
+              <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px">
+                <h2 style="font-size:20px">{{ vh.navn }}</h2>
+                <span class="muted" style="font-size:13px">{{ vh.beskrivelse }}</span>
+              </div>
+              <sc-if value="{{ vh.harEkstra }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#F3E3D2;border:1px solid #C4762E;border-radius:10px;padding:12px 16px;font-size:14px;margin-top:12px"><strong>Ekstraoppgave fra {{ vh.ekstra.fra }}:</strong> {{ vh.ekstra.tekst }}</div>
+              </sc-if>
+              <div style="margin-top:12px">
+                <sc-for list="{{ vh.medlemmerAdm }}" as="p" hint-placeholder-count="6">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F3">
+                    <div style="min-width:0;line-height:1.3">
+                      <div style="font-weight:600;font-size:14px">{{ p.navn }} <sc-if value="{{ p.harRolle }}" hint-placeholder-val="{{ false }}"><span class="tag" style="background:#DCEBEF;color:#06303F;margin-left:4px">{{ p.rolle }}</span></sc-if></div>
+                      <div class="muted" style="font-size:12px">{{ p.gren }}</div>
+                    </div>
+                    <span style="font-size:14px;font-variant-numeric:tabular-nums;flex:none">{{ p.ukeP }} p denne uka</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div class="card" style="display:flex;flex-direction:column;gap:14px">
+              <h2 style="font-size:20px">Oppslag i {{ vh.navn }}</h2>
+              <div class="field"><label for="adm-m">Melding til huset</label><textarea id="adm-m" onInput="{{ h.adm_melding }}" style="min-height:80px" value="{{ f.adm_melding }}"></textarea></div>
+              <div><button class="btn" onClick="{{ sendTilHus }}">Send til {{ vh.navn }}</button></div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ vhOppslag }}" as="o" hint-placeholder-count="3">
+                  <div style="display:flex;gap:12px;padding:12px 0;border-top:1px solid #EEF1F3">
+                    <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#E4EEF1;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px" aria-hidden="true">{{ o.initialer }}</div>
+                    <div style="min-width:0">
+                      <div style="font-size:14px"><strong>{{ o.fra }}</strong> <span class="muted">· {{ o.tid }}</span></div>
+                      <p style="margin-top:2px">{{ o.tekst }}</p>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:20px">
+            <div class="card">
+              <h2 style="font-size:20px;margin-bottom:8px">Stilling</h2>
+              <sc-for list="{{ stilling }}" as="st" hint-placeholder-count="3">
+                <div style="padding:10px 0;border-top:1px solid #EEF1F3">
+                  <div style="display:flex;justify-content:space-between;gap:8px;font-size:14px;margin-bottom:6px"><span>{{ st.plass }}. {{ st.navn }}</span><span style="font-variant-numeric:tabular-nums">{{ st.poeng }}</span></div>
+                  <div style="height:10px;background:#E4EEF1;border-radius:5px;overflow:hidden"><div style="{{ st.bar }}"></div></div>
+                  <div class="muted" style="font-size:12px;margin-top:4px">{{ st.uke }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div class="card" style="display:flex;flex-direction:column;gap:12px">
+              <h2 style="font-size:20px">Evaluering søndag</h2>
+              <p style="font-size:14px">Leder uke {{ ukeNr }}: <strong>{{ ukeLeder }}</strong> med +{{ ukeLederP }} p. Laget med flest poeng kan gi et annet lag en ekstraoppgave.</p>
+              <div>
+                <div style="font-size:13px;font-weight:600;margin-bottom:8px">Ekstraoppgave til</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ ekstraMaal }}" as="em" hint-placeholder-count="2">
+                    <button class="pill" onClick="{{ em.go }}" style="{{ em.stil }}">{{ em.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div class="field"><label for="adm-e">Ekstraoppgave</label><textarea id="adm-e" onInput="{{ h.adm_ekstra }}" style="min-height:80px" value="{{ f.adm_ekstra }}"></textarea></div>
+              <div><button class="btn" onClick="{{ giEkstra }}">Gi ekstraoppgave</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ===== HUSADMIN: SPILLUKER ===== -->
+      <sc-if value="{{ sHPlan }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div>
+          <p class="kicker">Husadministrator</p>
+          <h1 style="font-size:34px;margin-top:4px">Spilluker</h1>
+          <p class="muted" style="margin-top:6px">Oppgavene du legger inn her, vises på Hus-siden for alle utøverne.</p>
+        </div>
+        <sc-if value="{{ meldingVis }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="background:#E4EEF1;border:1px solid #00789B;border-radius:10px;padding:14px 18px"><strong>{{ melding }}</strong></div>
+        </sc-if>
+        <div class="card">
+          <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px">
+            <sc-for list="{{ ukeValg }}" as="uv" hint-placeholder-count="11">
+              <button class="pill" onClick="{{ uv.go }}" aria-current="{{ uv.cur }}" style="{{ uv.stil }}">{{ uv.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px">
+            <strong>Uke {{ uke.nr }}</strong><span class="muted">· {{ uke.dato }}</span>
+            <sc-if value="{{ uke.harTema }}" hint-placeholder-val="{{ false }}"><span class="tag" style="background:#FBE7B5;color:#06303F">{{ uke.tema }}</span></sc-if>
+            <sc-if value="{{ uke.harMerknad }}" hint-placeholder-val="{{ false }}"><span class="tag" style="background:#EEF1F3;color:#06303F">{{ uke.merknad }}</span></sc-if>
+          </div>
+          <sc-if value="{{ uke.tom }}" hint-placeholder-val="{{ false }}">
+            <p class="muted" style="margin-top:12px;padding-top:12px;border-top:1px solid #EEF1F3">Ingen oppgaver i denne uka ennå.</p>
+          </sc-if>
+          <sc-for list="{{ uke.oppg }}" as="o" hint-placeholder-count="2">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #EEF1F3;margin-top:10px">
+              <div style="min-width:0;flex:1 1 260px">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span class="tag" style="{{ o.katStil }}">{{ o.kat }}</span><strong>{{ o.tittel }}</strong></div>
+                <div class="muted" style="font-size:13px;margin-top:2px">{{ o.reglerTekst }} · Registrering: {{ o.regLabel }}</div>
+              </div>
+              <sc-if value="{{ o.ny }}" hint-placeholder-val="{{ false }}"><button class="btn-sec" onClick="{{ o.fjern }}" style="min-height:36px;padding:0 14px;flex:none">Fjern</button></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;gap:16px">
+          <h2 style="font-size:20px">Ny spilloppgave i uke {{ ukeNr }}</h2>
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px">Kategori</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ nyKatValg }}" as="kv" hint-placeholder-count="3">
+                <button class="pill" onClick="{{ kv.go }}" style="{{ kv.stil }}">{{ kv.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div class="field"><label for="no-t">Tittel</label><input id="no-t" type="text" value="{{ f.ny_oppg_tittel }}" onInput="{{ h.ny_oppg_tittel }}"></div>
+          <div class="field"><label for="no-b">Beskrivelse</label><textarea id="no-b" onInput="{{ h.ny_oppg_tekst }}" value="{{ f.ny_oppg_tekst }}"></textarea></div>
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px">Hvordan registreres oppgaven?</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ nyRegValg }}" as="rv" hint-placeholder-count="4">
+                <button class="pill" onClick="{{ rv.go }}" style="{{ rv.stil }}">{{ rv.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+            <div class="field"><label for="no-p">Poeng per levering</label><input id="no-p" type="text" inputmode="numeric" value="{{ f.ny_oppg_p }}" onInput="{{ h.ny_oppg_p }}"></div>
+            <div class="field"><label for="no-r">Poengregel slik utøverne ser den</label><input id="no-r" type="text" value="{{ f.ny_oppg_regel }}" onInput="{{ h.ny_oppg_regel }}"></div>
+          </div>
+          <div><button class="btn" onClick="{{ leggTilUkeOppg }}">Legg til i uke {{ ukeNr }}</button></div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ===== HUSADMIN: POENG ===== -->
+      <sc-if value="{{ sHPoeng }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div>
+          <p class="kicker">Husadministrator</p>
+          <h1 style="font-size:34px;margin-top:4px">Poeng</h1>
+          <p class="muted" style="margin-top:6px">Registreringer fra husene. Faste oppgaver med bildebevis må godkjennes før poengene står.</p>
+        </div>
+        <sc-if value="{{ meldingVis }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="background:#E4EEF1;border:1px solid #00789B;border-radius:10px;padding:14px 18px"><strong>{{ melding }}</strong></div>
+        </sc-if>
+        <div class="card">
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px">
+            <h2 style="font-size:20px">Siste registreringer</h2>
+            <span class="muted" style="font-size:13px">{{ ventTekst }}</span>
+          </div>
+          <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Tid</th><th>Hus</th><th>Utøver</th><th>Oppgave</th><th class="num">Poeng</th><th>Status</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ regRader }}" as="r" hint-placeholder-count="5">
+                <tr>
+                  <td style="white-space:nowrap">{{ r.tid }}</td>
+                  <td>{{ r.husNavn }}</td>
+                  <td>{{ r.navn }}</td>
+                  <td>{{ r.oppg }}</td>
+                  <td class="num"><strong>{{ r.pTekst }}</strong></td>
+                  <td>
+                    <sc-if value="{{ r.venter }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" onClick="{{ r.godkjenn }}" style="min-height:36px;padding:0 12px">Godkjenn</button><button class="btn-sec" onClick="{{ r.avvis }}" style="min-height:36px;padding:0 12px">Avvis</button></div>
+                    </sc-if>
+                    <sc-if value="{{ r.ferdig }}" hint-placeholder-val="{{ true }}"><span class="tag" style="{{ r.statusStil }}">{{ r.status }}</span></sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          </div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;gap:16px">
+          <h2 style="font-size:20px">Poengjustering</h2>
+          <p class="muted" style="font-size:13px">For resultater som ikke registreres automatisk, for eksempel lagskyting, kiosk-kokeboka eller trekk.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ justHusValg }}" as="jh" hint-placeholder-count="3">
+              <button class="pill" onClick="{{ jh.go }}" style="{{ jh.stil }}">{{ jh.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+            <div class="field"><label for="ju-p">Poeng (bruk minus for trekk)</label><input id="ju-p" type="text" value="{{ f.just_p }}" onInput="{{ h.just_p }}"></div>
+            <div class="field"><label for="ju-t">Begrunnelse</label><input id="ju-t" type="text" value="{{ f.just_tekst }}" onInput="{{ h.just_tekst }}"></div>
+          </div>
+          <div><button class="btn" onClick="{{ leggTilJustering }}">Legg til justering</button></div>
+        </div>
+      </div>
+      </sc-if>
+
       <!-- ===== TRENER: OVERSIKT ===== -->
       <sc-if value="{{ sTOversikt }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:20px">
@@ -836,7 +1026,7 @@ body{margin:0}
                   </sc-if>
                   <sc-if value="{{ a.skriver }}" hint-placeholder-val="{{ false }}">
                     <div style="display:flex;flex-direction:column;gap:8px">
-                      <div class="field"><label for="{{ a.fid }}">Tilbakemelding til {{ a.fornavn }}</label><textarea id="{{ a.fid }}" onInput="{{ a.sett }}" style="min-height:80px">{{ a.utkast }}</textarea></div>
+                      <div class="field"><label for="{{ a.fid }}">Tilbakemelding til {{ a.fornavn }}</label><textarea id="{{ a.fid }}" onInput="{{ a.sett }}" style="min-height:80px" value="{{ a.utkast }}"></textarea></div>
                       <div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" onClick="{{ a.send }}">Send</button><button class="btn-sec" onClick="{{ a.avbryt }}">Avbryt</button></div>
                     </div>
                   </sc-if>
@@ -915,7 +1105,7 @@ body{margin:0}
         <div class="card">
           <div style="overflow-x:auto">
           <table class="tbl">
-            <thead><tr><th>Utøver</th><th>Hus</th><th class="num">Økter 30 d</th><th>Siste aktivitet</th><th class="num">Åpne oppgaver</th><th></th></tr></thead>
+            <thead><tr><th>Utøver</th><th>Gruppe</th><th class="num">Økter 30 d</th><th>Siste aktivitet</th><th class="num">Åpne oppgaver</th><th></th></tr></thead>
             <tbody>
               <sc-for list="{{ utRader }}" as="u" hint-placeholder-count="6">
                 <tr>
@@ -971,7 +1161,7 @@ body{margin:0}
                 </sc-if>
                 <sc-if value="{{ a.skriver }}" hint-placeholder-val="{{ false }}">
                   <div style="display:flex;flex-direction:column;gap:8px">
-                    <div class="field"><label for="{{ a.fid }}">Tilbakemelding til {{ a.fornavn }}</label><textarea id="{{ a.fid }}" onInput="{{ a.sett }}" style="min-height:80px">{{ a.utkast }}</textarea></div>
+                    <div class="field"><label for="{{ a.fid }}">Tilbakemelding til {{ a.fornavn }}</label><textarea id="{{ a.fid }}" onInput="{{ a.sett }}" style="min-height:80px" value="{{ a.utkast }}"></textarea></div>
                     <div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" onClick="{{ a.send }}">Send</button><button class="btn-sec" onClick="{{ a.avbryt }}">Avbryt</button></div>
                   </div>
                 </sc-if>
@@ -1285,6 +1475,23 @@ class Component extends DCLogic {
         ],
         rekorder: [],
         bidrag: []
+      },
+      {
+        id: 'm6', navn: 'Laura Berge', fornavn: 'Laura', initialer: 'LB', epost: 'laura.berge@example.no', erTrener: true, rolle: 'husadmin',
+        telefon: '+47 900 00 666', siden: '2014', grupper: ['Trenere', 'Prosjektgruppa for Klubbspillet'],
+        buetype: 'Recurve (R)', klasse: 'RD', lisensStatus: 'Aktiv', lisensUtloper: '31.12.2026', lisensSnart: false,
+        divisjon: 'Recurve', klassifisering: 'Klasse 1', skill: 'Erfaren', utstyr: 'Recurve, 36 lbs',
+        starter: 6, pall: 2, seire: 1, opp: { total: 46, mott: 41, avslatt: 4, ikke: 1 },
+        treninger365: 70, dugnad365: 30, perGren: [40, 24, 0, 6],
+        maal: [['Treninger i sesongen', 70, 90, '70 av 90'], ['Poeng på 70 m', 598, 620, '598 av 620']],
+        oppgaver: [],
+        bilder: [{ tittel: 'Oppstartsamling i Fabrikken', dato: '09.01.2027', alt: 'Bilde fra oppstartsamlingen i Fabrikken' }],
+        sesonger: [5, 6, 4, 6, 6], monster: 'mmmmmmmm',
+        resultater: [
+          { dato: '12.10.2026', stevne: 'Høststevnet Lillehammer', dist: '18 m, 60 piler', klasse: 'RD', poeng: 536, plass: 1 }
+        ],
+        rekorder: [],
+        bidrag: []
       }
     ];
   }
@@ -1293,27 +1500,27 @@ class Component extends DCLogic {
     const t = 'Kari Lunde';
     return {
       trener: t,
-      grupper: ['Hus A', 'Hus B'],
+      grupper: ['Barebow-gruppa', 'Recurve og compound'],
       utovere: [
-        { id: 'm1', navn: 'Ingrid Solheim', hus: 'Hus A', buetype: 'Barebow', okter30: 9, sisteAkt: 'I dag', dagerSiden: 0 },
-        { id: 'x1', navn: 'Siri Haugen', hus: 'Hus A', buetype: 'Barebow', okter30: 7, sisteAkt: 'I går', dagerSiden: 1,
+        { id: 'm1', navn: 'Ingrid Solheim', hus: 'Barebow-gruppa', buetype: 'Barebow', okter30: 9, sisteAkt: 'I dag', dagerSiden: 0 },
+        { id: 'x1', navn: 'Siri Haugen', hus: 'Barebow-gruppa', buetype: 'Barebow', okter30: 7, sisteAkt: 'I går', dagerSiden: 1,
           oppgaver: [{ id: 'x1-0', tittel: 'Ankerpunkt: 3 × 20 piler med fast anker', trener: t, frist: 'Frist fre 31. okt' }] },
-        { id: 'x2', navn: 'Ole Rustad', hus: 'Hus A', buetype: 'Barebow', okter30: 2, sisteAkt: '16 dager siden', dagerSiden: 16,
+        { id: 'x2', navn: 'Ole Rustad', hus: 'Barebow-gruppa', buetype: 'Barebow', okter30: 2, sisteAkt: '16 dager siden', dagerSiden: 16,
           oppgaver: [{ id: 'x2-0', tittel: 'Film utløsningen og del videoen', trener: t, frist: 'Frist var 20. okt', forsinket: true }] },
-        { id: 'x3', navn: 'Anne Moe', hus: 'Hus A', buetype: 'Barebow', okter30: 5, sisteAkt: '3 dager siden', dagerSiden: 3,
+        { id: 'x3', navn: 'Anne Moe', hus: 'Barebow-gruppa', buetype: 'Barebow', okter30: 5, sisteAkt: '3 dager siden', dagerSiden: 3,
           oppgaver: [{ id: 'x3-0', tittel: 'Stringwalking-tabell for 12–18 m', trener: t, frist: 'Gjort 22. okt', gjort: true }] },
-        { id: 'x4', navn: 'Per Lie', hus: 'Hus A', buetype: 'Barebow', okter30: 0, sisteAkt: '5 uker siden', dagerSiden: 35,
+        { id: 'x4', navn: 'Per Lie', hus: 'Barebow-gruppa', buetype: 'Barebow', okter30: 0, sisteAkt: '5 uker siden', dagerSiden: 35,
           oppgaver: [{ id: 'x4-0', tittel: 'Avtal en individuell økt', trener: t, frist: 'Frist var 15. okt', forsinket: true }] },
-        { id: 'x5', navn: 'Lise Berg', hus: 'Hus A', buetype: 'Barebow', okter30: 6, sisteAkt: '2 dager siden', dagerSiden: 2, oppgaver: [] },
-        { id: 'x8', navn: 'Kristin Bø', hus: 'Hus A', buetype: 'Langbue', okter30: 4, sisteAkt: '5 dager siden', dagerSiden: 5, oppgaver: [] },
-        { id: 'm2', navn: 'Henrik Dahl', hus: 'Hus B', buetype: 'Recurve', okter30: 11, sisteAkt: 'I går', dagerSiden: 1 },
-        { id: 'x6', navn: 'Eirik Nyhus', hus: 'Hus B', buetype: 'Recurve', okter30: 8, sisteAkt: '4 dager siden', dagerSiden: 4,
+        { id: 'x5', navn: 'Lise Berg', hus: 'Barebow-gruppa', buetype: 'Barebow', okter30: 6, sisteAkt: '2 dager siden', dagerSiden: 2, oppgaver: [] },
+        { id: 'x8', navn: 'Kristin Bø', hus: 'Barebow-gruppa', buetype: 'Langbue', okter30: 4, sisteAkt: '5 dager siden', dagerSiden: 5, oppgaver: [] },
+        { id: 'm2', navn: 'Henrik Dahl', hus: 'Recurve og compound', buetype: 'Recurve', okter30: 11, sisteAkt: 'I går', dagerSiden: 1 },
+        { id: 'x6', navn: 'Eirik Nyhus', hus: 'Recurve og compound', buetype: 'Recurve', okter30: 8, sisteAkt: '4 dager siden', dagerSiden: 4,
           oppgaver: [{ id: 'x6-0', tittel: 'Klikkertrening: 4 × 15 piler', trener: t, frist: 'Frist tors 30. okt' }] },
-        { id: 'x7', navn: 'Marte Vold', hus: 'Hus B', buetype: 'Recurve', okter30: 4, sisteAkt: '9 dager siden', dagerSiden: 9,
+        { id: 'x7', navn: 'Marte Vold', hus: 'Recurve og compound', buetype: 'Recurve', okter30: 4, sisteAkt: '9 dager siden', dagerSiden: 9,
           oppgaver: [{ id: 'x7-0', tittel: 'Bytt klikker og test på 30 m', trener: t, frist: 'Frist søn 2. nov' }] },
-        { id: 'x9', navn: 'Jon Sæther', hus: 'Hus B', buetype: 'Instinktiv', okter30: 3, sisteAkt: '11 dager siden', dagerSiden: 11, oppgaver: [] },
-        { id: 'x10', navn: 'Tone Ruud', hus: 'Hus B', buetype: 'Barebow', okter30: 7, sisteAkt: 'I går', dagerSiden: 1, oppgaver: [] },
-        { id: 'm3', navn: 'Mari Aasen', hus: 'Hus B', buetype: 'Compound', okter30: 8, sisteAkt: '2 dager siden', dagerSiden: 2 }
+        { id: 'x9', navn: 'Jon Sæther', hus: 'Recurve og compound', buetype: 'Instinktiv', okter30: 3, sisteAkt: '11 dager siden', dagerSiden: 11, oppgaver: [] },
+        { id: 'x10', navn: 'Tone Ruud', hus: 'Recurve og compound', buetype: 'Barebow', okter30: 7, sisteAkt: 'I går', dagerSiden: 1, oppgaver: [] },
+        { id: 'm3', navn: 'Mari Aasen', hus: 'Recurve og compound', buetype: 'Compound', okter30: 8, sisteAkt: '2 dager siden', dagerSiden: 2 }
       ],
       aktivitet: [
         { id: 'a1', uid: 'm1', type: 'Logg', tittel: 'Ankerpunkt-økt', tid: 'I dag 18:40', maal: 'Samme anker på alle 60 piler', notat: 'Ankeret glir når jeg blir sliten etter ca. 40 piler. Kan vi se på det torsdag?' },
@@ -1356,6 +1563,11 @@ class Component extends DCLogic {
         ['Bue', [['Buetype', 'Barebow'], ['Håndtak', '25", med barebow-vekter'], ['Lemmer', '68", merket 38 lbs'], ['Trekkvekt', '40 lbs på fingrene'], ['Trekklengde', '28"']]],
         ['Innstillinger', [['Strenghøyde', '22 cm'], ['Tiller', '0 mm'], ['Nockpunkt', '8 mm over 90°']]],
         ['Piler', [['Type', 'Karbon'], ['Spine', '600'], ['Lengde', '28,5"'], ['Spissvekt', '120 grain']]]
+      ] },
+      m6: { endret: '02.01.2027', grupper: [
+        ['Bue', [['Buetype', 'Recurve'], ['Håndtak', '25"'], ['Lemmer', '68", merket 34 lbs'], ['Trekkvekt', '36 lbs på fingrene'], ['Trekklengde', '27"']]],
+        ['Innstillinger', [['Strenghøyde', '22 cm'], ['Tiller', '+2 mm'], ['Nockpunkt', '9 mm over 90°'], ['Klikker', 'Blad, 4 mm fra spiss']]],
+        ['Piler', [['Type', 'Karbon'], ['Spine', '700'], ['Lengde', '28"'], ['Spissvekt', '100 grain']]]
       ] }
     };
   }
@@ -1552,8 +1764,10 @@ class Component extends DCLogic {
     const husId = this.husFor(m0.id);
     const ekstraP = s.ekstraPoeng || {};
     const tall = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    const ekstraOv = s.ekstraOv || {};
     const husListe = ['A', 'B', 'C'].map((k) => Object.assign({}, husAlle[k], {
-      poeng: husAlle[k].poeng + (ekstraP[k] || 0), uke: husAlle[k].uke + (ekstraP[k] || 0)
+      poeng: husAlle[k].poeng + (ekstraP[k] || 0), uke: husAlle[k].uke + (ekstraP[k] || 0),
+      ekstra: ekstraOv[k] || husAlle[k].ekstra || null
     }));
     const sortert = husListe.slice().sort((a, b) => b.poeng - a.poeng);
     const maksP = sortert[0].poeng;
@@ -1596,7 +1810,10 @@ class Component extends DCLogic {
     const skaareBrukt = bruktMap[m0.id] || 0;
     const kakeTatt = !!(s.kakeTatt || {})[husId];
     // Ukeplan (spilluker)
-    const plan = this.ukeplan();
+    const nyeUke = s.nyeUkeOppg || [];
+    const plan = this.ukeplan().map((u) => Object.assign({}, u, {
+      oppg: u.oppg.concat(nyeUke.filter((x) => x.uke === u.nr).map((x) => x.oppg))
+    }));
     const ukeNr = s.ukeNr || 3;
     const ukeRaw = plan.find((u) => u.nr === ukeNr) || plan[0];
     const levert = s.ukeLevert || {};
@@ -1611,7 +1828,11 @@ class Component extends DCLogic {
         kanReg: regTyper.indexOf(o.reg) >= 0 && !brukt && !!hus, harAuto: !!o.autoTekst, autoTekst: o.autoTekst || '',
         tekstL: o.tekst.map((l) => ({ linje: l })), reglerL: o.regler.map((l) => ({ linje: l })),
         sp1: (o.sporsmal || [])[0] || '', sp2: (o.sporsmal || [])[1] || '', maksSkaare: o.maksSkaare || 0,
-        reg: () => this.setState({ skjerm: 'leggtil', fane: 'spill', spillValg: 'uke', ukeOppgId: o.id, melding: '' })
+        reglerTekst: o.regler.join(' · '),
+        regLabel: { maal: 'skjema for mål', skaare: 'skåre', sporsmal: 'spørsmål', plassering: 'plassering med bilde', oppskrift: 'oppskrift', bilde: 'bilde', auto: 'automatisk eller av husadministrator' }[o.reg] || o.reg,
+        ny: !!o.ny,
+        fjern: () => this.setState({ nyeUkeOppg: (this.state.nyeUkeOppg || []).filter((x) => x.oppg.id !== o.id), melding: 'Oppgaven er fjernet fra uke ' + ukeNr + '.' }),
+        reg: () => this.setState({ spillValg: 'uke', ukeOppgId: o.id, ukePlass: undefined, melding: '' })
       });
     });
     const ukeReg = ukeOppgAlle.filter((o) => regTyper.indexOf(o.reg) >= 0 && !o.brukt);
@@ -1672,6 +1893,44 @@ class Component extends DCLogic {
     const oppSum = oppDelt.reduce((a, d) => a + d.effekt, 0);
     const oppSumTekst = (oppSum < 0 ? '−' : '+') + Math.abs(oppSum) + ' p';
 
+    // ---- Husadministrator ----
+    const vhId = s.valgtHus || 'A';
+    const vhRaw = husListe.find((x) => x.id === vhId);
+    const ukeLederH = husListe.slice().sort((a, b) => b.uke - a.uke)[0];
+    const ekstraTil = s.ekstraTil && s.ekstraTil !== ukeLederH.id ? s.ekstraTil : husListe.find((x) => x.id !== ukeLederH.id).id;
+    const nyKat = s.nyKat || 'Hele laget';
+    const nyReg = s.nyReg || 'skaare';
+    const regStatus = s.regStatus || {};
+    const justHus = s.justHus || 'A';
+    const seedReg = [
+      { id: 'r1', tid: 'I dag 18:12', hus: 'A', navn: 'Siri Haugen', oppg: 'Uke 3: 60 piler skåre med 9 som 10', p: 20, godk: false },
+      { id: 'r2', tid: 'I dag 16:40', hus: 'B', navn: 'Henrik Dahl', oppg: '30 piles skåre', p: 10, godk: false },
+      { id: 'r3', tid: 'I går 20:05', hus: 'C', navn: 'Jakob Holm', oppg: 'Bake kake til kiosk', p: 100, godk: true },
+      { id: 'r4', tid: 'Tirs 21:10', hus: 'A', navn: 'Ole Rustad', oppg: 'Støvsuge Fabrikken', p: 50, godk: true },
+      { id: 'r5', tid: 'Man 19:30', hus: 'B', navn: 'Tone Ruud', oppg: 'Uke 3: 60 piler skåre med 9 som 10', p: 20, godk: false }
+    ];
+    const fraSpill = s.tillegg.filter((t) => t.type === 'Klubbspill' && this.husFor(t.medlemId)).map((t) => {
+      const med = alle.find((x) => x.id === t.medlemId);
+      const pt = /^\+(\d+) p/.exec(t.status || '');
+      return { id: t.id, tid: 'Nå', hus: this.husFor(t.medlemId), navn: med ? med.navn : '', oppg: t.tittel, p: pt ? parseInt(pt[1], 10) : 0, godk: false };
+    });
+    const regRader = (s.justeringer || []).concat(fraSpill).concat(seedReg).map((r) => {
+      const st = regStatus[r.id] || (r.godk ? 'Til godkjenning' : 'Godkjent');
+      const venter = st === 'Til godkjenning';
+      return {
+        tid: r.tid, husNavn: 'Hus ' + r.hus, navn: r.navn, oppg: r.oppg,
+        pTekst: (r.p < 0 ? '−' : '+') + Math.abs(r.p) + ' p', status: st, venter, ferdig: !venter,
+        statusStil: st === 'Avvist' ? 'background:#F3E3D2;color:#06303F' : 'background:#DCEBEF;color:#06303F',
+        godkjenn: () => { const n = Object.assign({}, this.state.regStatus || {}); n[r.id] = 'Godkjent'; this.setState({ regStatus: n, melding: '«' + r.oppg + '» er godkjent for Hus ' + r.hus + '.' }); },
+        avvis: () => {
+          const n = Object.assign({}, this.state.regStatus || {}); n[r.id] = 'Avvist';
+          const ep = Object.assign({}, this.state.ekstraPoeng || {}); ep[r.hus] = (ep[r.hus] || 0) - r.p;
+          this.setState({ regStatus: n, ekstraPoeng: ep, melding: '«' + r.oppg + '» er avvist, og ' + r.p + ' p er trukket fra Hus ' + r.hus + '.' });
+        }
+      };
+    });
+    const antVent = regRader.filter((r) => r.venter).length;
+
     const aktivNav = (s.skjerm === 'oppmote' || s.skjerm === 'res' || s.skjerm === 'bue') ? 'profil' : s.skjerm === 'tutover' ? 'tutovere' : s.skjerm;
 
     const bue = this.bueData()[m0.id];
@@ -1699,6 +1958,7 @@ class Component extends DCLogic {
     const td = this.trenerData();
     const erTrener = !!m0.erTrener;
     const trener = erTrener && s.modus === 'trener';
+    const erHusAdmin = m0.rolle === 'husadmin';
     const gjorte = s.gjorte || {};
     const nye = s.nyeOppg || [];
     const statusStil = (st) => st === 'Gjort' ? 'background:#DCEBEF;color:#06303F' : st === 'Forsinket' ? 'background:#F3E3D2;color:#06303F' : 'background:#EEF1F3;color:#06303F';
@@ -1779,7 +2039,7 @@ class Component extends DCLogic {
       visApp: s.inne,
       epostVisning: m0.epost,
       medlemmer: alle.map((x) => ({
-        navn: x.navn + (x.erTrener ? ' (trener)' : ''),
+        navn: x.navn + (x.rolle === 'husadmin' ? ' (husadministrator)' : x.erTrener ? ' (trener)' : ''),
         stil: this.stil(x.id === s.medlemId),
         velg: () => this.setState({ medlemId: x.id })
       })),
@@ -1811,7 +2071,11 @@ class Component extends DCLogic {
       ingenBilde: m0.bilder.length === 0,
       bilder: m0.bilder.slice(0, 3),
 
-      nav: (trener ? [
+      nav: (trener && erHusAdmin ? [
+        ['hadm', 'Husene', 'M4 20V9l8-5 8 5v11M9 20v-6h6v6M2 20h20'],
+        ['hplan', 'Spilluker', 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4'],
+        ['hpoeng', 'Poeng', 'M4 20V10M10 20V4M16 20v-7M2 20h20']
+      ] : trener ? [
         ['toversikt', 'Oversikt', 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z'],
         ['tutovere', 'Utøvere', 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3 3-5 6-5s6 2 6 5M17 11a2.5 2.5 0 1 0 0-5M18 15c2 .5 3 2 3 5'],
         ['toppgaver', 'Oppgaver', 'M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2'],
@@ -1942,7 +2206,7 @@ class Component extends DCLogic {
           const lv = Object.assign({}, this.state.ukeLevert || {}); lv[lk] = (lv[lk] || 0) + 1; ekstra.ukeLevert = lv;
           ekstra.ukePlass = undefined;
         }
-        const t = { medlemId: m0.id, type: 'Klubbspill', tittel, meta, status: status || ('+' + p + ' p til ' + hus.navn), tone: 'ok' };
+        const t = { id: 'k' + Date.now(), medlemId: m0.id, type: 'Klubbspill', tittel, meta, status: status || ('+' + p + ' p til ' + hus.navn), tone: 'ok' };
         giPoeng(p, Object.assign(ekstra, {
           tillegg: [t].concat(this.state.tillegg),
           melding: p > 0 ? '+' + p + ' p er lagt til ' + hus.navn + '.' : 'Levert til ' + hus.navn + '.',
@@ -1996,7 +2260,7 @@ class Component extends DCLogic {
 
       fliser: [
         ['okt', 'Trening', 'Registrer en treningsøkt', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z'],
-        ['spill', 'Spill', 'Poeng til huset', 'M4 4h16v16H4zM8.5 8.5v.01M15.5 8.5v.01M12 12v.01M8.5 15.5v.01M15.5 15.5v.01'],
+        ['spill', 'Spill', 'Treningsspill og dueller', 'M4 4h16v16H4zM8.5 8.5v.01M15.5 8.5v.01M12 12v.01M8.5 15.5v.01M15.5 15.5v.01'],
         ['oppg', 'Oppgaver', 'Fra treneren din', 'M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2'],
         ['logg', 'Logg', 'Dagbok etter økta', 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11']
       ].map((p) => ({
@@ -2080,6 +2344,10 @@ class Component extends DCLogic {
         uke_maal1: this.fv('uke_maal1', ''), uke_maal2: this.fv('uke_maal2', ''), uke_maal3: this.fv('uke_maal3', ''),
         uke_skaare: this.fv('uke_skaare', ''), uke_sp1: this.fv('uke_sp1', ''), uke_sp2: this.fv('uke_sp2', ''),
         uke_oppskrift_navn: this.fv('uke_oppskrift_navn', ''), uke_oppskrift: this.fv('uke_oppskrift', ''),
+        adm_melding: this.fv('adm_melding', ''), adm_ekstra: this.fv('adm_ekstra', ''),
+        ny_oppg_tittel: this.fv('ny_oppg_tittel', ''), ny_oppg_tekst: this.fv('ny_oppg_tekst', ''),
+        ny_oppg_regel: this.fv('ny_oppg_regel', ''), ny_oppg_p: this.fv('ny_oppg_p', ''),
+        just_p: this.fv('just_p', ''), just_tekst: this.fv('just_tekst', ''),
         ny_tittel: this.fv('ny_tittel', ''),
         ny_frist: this.fv('ny_frist', ''),
         to_tittel: this.fv('to_tittel', ''),
@@ -2108,6 +2376,10 @@ class Component extends DCLogic {
         uke_skaare: this.settF('uke_skaare'), uke_sp1: this.settF('uke_sp1'), uke_sp2: this.settF('uke_sp2'),
         uke_oppskrift_navn: this.settF('uke_oppskrift_navn'), uke_oppskrift: this.settF('uke_oppskrift'),
         ny_tittel: this.settF('ny_tittel'), ny_frist: this.settF('ny_frist'),
+        adm_melding: this.settF('adm_melding'), adm_ekstra: this.settF('adm_ekstra'),
+        ny_oppg_tittel: this.settF('ny_oppg_tittel'), ny_oppg_tekst: this.settF('ny_oppg_tekst'),
+        ny_oppg_regel: this.settF('ny_oppg_regel'), ny_oppg_p: this.settF('ny_oppg_p'),
+        just_p: this.settF('just_p'), just_tekst: this.settF('just_tekst'),
         to_tittel: this.settF('to_tittel'), to_frist: this.settF('to_frist'),
         p_navn: this.settF('p_navn'), p_telefon: this.settF('p_telefon'), p_div: this.settF('p_div'),
         p_klass: this.settF('p_klass'), p_skill: this.settF('p_skill'), p_utstyr: this.settF('p_utstyr')
@@ -2144,15 +2416,90 @@ class Component extends DCLogic {
       },
       grupper: m0.grupper.map((g) => ({ navn: g })),
 
+      // ---- Husadministrator ----
+      sHAdm: s.skjerm === 'hadm',
+      sHPlan: s.skjerm === 'hplan',
+      sHPoeng: s.skjerm === 'hpoeng',
+      husKort: sortert.map((x, i) => ({
+        navn: x.navn, plassTekst: (i + 1) + '. plass', poeng: tall(x.poeng) + ' p', uke: x.uke,
+        antall: x.medlemmer.length, sekretaer: x.sekretaer, valgt: x.id === vhId ? 'true' : 'false',
+        stil: 'font:inherit;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px 18px;border-radius:10px;cursor:pointer;color:#06303F;' +
+          (x.id === vhId ? 'background:#E4EEF1;border:2px solid #00789B' : 'background:#fff;border:1px solid #DDE4E8'),
+        velg: () => this.setState({ valgtHus: x.id })
+      })),
+      vh: Object.assign({}, vhRaw, {
+        harEkstra: !!vhRaw.ekstra, ekstra: vhRaw.ekstra || { fra: '', tekst: '' },
+        medlemmerAdm: vhRaw.medlemmer.map((p) => Object.assign({}, p, { ukeP: ((p.navn.length * 7) % 40) + 5 }))
+      }),
+      vhOppslag: ((s.husInnlegg || {})[vhId] || []).concat(vhRaw.oppslag).map((o) => Object.assign({}, o, {
+        initialer: o.fra.split(' ').map((d) => d[0]).join('')
+      })),
+      sendTilHus: () => {
+        const tekst = this.fv('adm_melding', '').trim();
+        if (!tekst) return;
+        const ny = Object.assign({}, this.state.husInnlegg || {});
+        ny[vhId] = [{ fra: m.navn, tid: 'nå', tekst }].concat(ny[vhId] || []);
+        this.setState({ husInnlegg: ny, melding: 'Meldingen er sendt til ' + vhRaw.navn + '.', f: Object.assign({}, this.state.f, { adm_melding: '' }) });
+      },
+      ukeLeder: ukeLederH.navn,
+      ukeLederP: ukeLederH.uke,
+      ekstraMaal: husListe.filter((x) => x.id !== ukeLederH.id).map((x) => ({
+        label: x.navn, stil: this.stil(x.id === ekstraTil), go: () => this.setState({ ekstraTil: x.id })
+      })),
+      giEkstra: () => {
+        const tekst = this.fv('adm_ekstra', '').trim();
+        if (!tekst) { this.setState({ melding: 'Skriv inn ekstraoppgaven først.' }); return; }
+        const ov = Object.assign({}, this.state.ekstraOv || {}); ov[ekstraTil] = { fra: ukeLederH.navn, tekst };
+        const mal = husListe.find((x) => x.id === ekstraTil);
+        this.setState({ ekstraOv: ov, melding: mal.navn + ' har fått en ekstraoppgave fra ' + ukeLederH.navn + '.', f: Object.assign({}, this.state.f, { adm_ekstra: '' }) });
+      },
+      nyKatValg: ['Hele laget', 'Én fra hvert lag', 'Enkeltvis'].map((l) => ({ label: l, stil: this.stil(nyKat === l), go: () => this.setState({ nyKat: l }) })),
+      nyRegValg: [['skaare', 'Skåre'], ['plassering', 'Plassering med bilde'], ['bilde', 'Bilde'], ['auto', 'Av husadministrator']].map((p) => ({
+        label: p[1], stil: this.stil(nyReg === p[0]), go: () => this.setState({ nyReg: p[0] })
+      })),
+      leggTilUkeOppg: () => {
+        const tittel = this.fv('ny_oppg_tittel', '').trim();
+        if (!tittel) { this.setState({ melding: 'Gi oppgaven en tittel.' }); return; }
+        const pv = parseInt(this.fv('ny_oppg_p', ''), 10) || 0;
+        const regel = this.fv('ny_oppg_regel', '').trim() || (pv ? pv + ' p per levering' : 'Poeng ikke fastsatt');
+        const o = {
+          id: 'ny' + Date.now(), ny: true, kat: nyKat, tittel, reg: nyReg, p: pv, maks: 1, maksSkaare: 300,
+          plassP: [pv, Math.round(pv / 2), Math.round(pv / 6)],
+          tekst: [this.fv('ny_oppg_tekst', '').trim() || 'Ingen beskrivelse.'], regler: [regel],
+          autoTekst: nyReg === 'auto' ? 'Poengene registreres av husadministrator.' : ''
+        };
+        this.setState({
+          nyeUkeOppg: (this.state.nyeUkeOppg || []).concat([{ uke: ukeNr, oppg: o }]),
+          melding: '«' + tittel + '» er lagt til i uke ' + ukeNr + ' og vises nå for alle husene.',
+          f: Object.assign({}, this.state.f, { ny_oppg_tittel: '', ny_oppg_tekst: '', ny_oppg_regel: '', ny_oppg_p: '' })
+        });
+      },
+      regRader,
+      ventTekst: antVent === 0 ? 'Ingenting venter på godkjenning' : antVent + ' venter på godkjenning',
+      justHusValg: husListe.map((x) => ({ label: x.navn, stil: this.stil(justHus === x.id), go: () => this.setState({ justHus: x.id }) })),
+      leggTilJustering: () => {
+        const p = parseInt(this.fv('just_p', '').trim().replace('−', '-'), 10);
+        if (isNaN(p) || p === 0) { this.setState({ melding: 'Skriv inn antall poeng, for eksempel 75 eller −50.' }); return; }
+        const tekst = this.fv('just_tekst', '').trim() || 'uten begrunnelse';
+        const ep = Object.assign({}, this.state.ekstraPoeng || {}); ep[justHus] = (ep[justHus] || 0) + p;
+        const j = { id: 'j' + Date.now(), tid: 'Nå', hus: justHus, navn: m.navn, oppg: 'Justering: ' + tekst, p, godk: false };
+        this.setState({
+          ekstraPoeng: ep, justeringer: [j].concat(this.state.justeringer || []),
+          melding: 'Hus ' + justHus + ' har fått ' + (p < 0 ? '−' : '+') + Math.abs(p) + ' p.',
+          f: Object.assign({}, this.state.f, { just_p: '', just_tekst: '' })
+        });
+      },
+
       // ---- Trener ----
       erTrener,
-      sideNavn: trener ? 'Trenerside' : 'Min side',
+      sideNavn: trener ? (erHusAdmin ? 'Husadministrasjon' : 'Trenerside') : 'Min side',
+      rolleKnappTekst: erHusAdmin ? 'Husadmin' : 'Trener',
       medlemPressed: trener ? 'false' : 'true',
       trenerPressed: trener ? 'true' : 'false',
       medlemKnapp: 'font:inherit;font-size:14px;font-weight:600;border:0;border-radius:999px;padding:0 14px;min-height:44px;cursor:pointer;' + (trener ? 'background:transparent;color:#06303F' : 'background:#06303F;color:#fff'),
       trenerKnapp: 'font:inherit;font-size:14px;font-weight:600;border:0;border-radius:999px;padding:0 14px;min-height:44px;cursor:pointer;' + (trener ? 'background:#06303F;color:#fff' : 'background:transparent;color:#06303F'),
       tilMedlemModus: () => this.setState({ modus: 'medlem', skjerm: 'hjem', melding: '' }),
-      tilTrenerModus: () => this.setState({ modus: 'trener', skjerm: 'toversikt', melding: '' }),
+      tilTrenerModus: () => this.setState({ modus: 'trener', skjerm: erHusAdmin ? 'hadm' : 'toversikt', melding: '' }),
       sTOversikt: s.skjerm === 'toversikt',
       sTUtovere: s.skjerm === 'tutovere',
       sTUtover: s.skjerm === 'tutover',
